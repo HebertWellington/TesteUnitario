@@ -1,7 +1,5 @@
 package br.ce.wcaquino.matchers;
 
-import static br.ce.wcaquino.utils.DataUtils.obterDataComDiferencaDias;
-
 import java.util.Calendar;
 import java.util.Date;
 
@@ -20,8 +18,8 @@ public class MatchersProprios {
 		return new MesmaDataMatcher(new Date());
 	}
 	
-	public static MesmaDataMatcher ehHojeComDiferencaDias(int dias) {
-		return new MesmaDataMatcher(obterDataComDiferencaDias(1));
+	public static DataDiferencaDiasMatcher ehHojeComDiferencaDias(Integer dias) {
+		return new DataDiferencaDiasMatcher(dias);
 	}
 	
 }

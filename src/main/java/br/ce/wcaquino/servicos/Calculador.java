@@ -20,5 +20,9 @@ public class Calculador {
 		}
 		return a/b;
 	}
+	
+	public void imprime() {
+		System.out.println("Passei aqui");
+	}
 
 }

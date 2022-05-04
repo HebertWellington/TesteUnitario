@@ -21,7 +21,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +34,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ErrorCollector;
 import org.junit.rules.ExpectedException;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -46,6 +46,8 @@ import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
 import br.ce.wcaquino.exceptions.FilmeSemEstoqueException;
 import br.ce.wcaquino.exceptions.LocadoraException;
+import br.ce.wcaquino.matchers.DataDiferencaDiasMatcher;
+import br.ce.wcaquino.matchers.MatchersProprios;
 
 public class LocacaoServiceTest {
 	
@@ -71,8 +73,7 @@ public class LocacaoServiceTest {
 
 	@Before
 	public void testLocação() {
-		initMocks(this);
-		
+		 MockitoAnnotations.openMocks(this);		
 	}
 
 	@Test
@@ -239,6 +240,13 @@ public class LocacaoServiceTest {
 		service.prorrogarLocacao(locacao, 3);
 		
 		//verificacao
-		Mockito.verify(dao).salvar(locacao);
+		ArgumentCaptor<Locacao> argCapt = ArgumentCaptor.forClass(Locacao.class);
+		Mockito.verify(dao).salvar(argCapt.capture());
+		Locacao locacaoRetornada = argCapt.getValue();
+		
+		error.checkThat(locacaoRetornada.getValor(), is(30.0));
+		error.checkThat(locacaoRetornada.getDataLocacao(), ehHoje());
+		error.checkThat(locacaoRetornada.getDataRetorno(), MatchersProprios.ehHojeComDiferencaDias(3));
+
 	}
 }
